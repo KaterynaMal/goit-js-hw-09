@@ -4,7 +4,7 @@ import 'flatpickr/dist/flatpickr.min.css';
 const dateTimePicker = document.querySelector('#datetime-picker');
 const startButton = document.querySelector('[data-start]');
 const timer = document.querySelector('.timer');
-const fields = document.querySelectorAll('.field');
+const timerFields = document.querySelectorAll('.field .value');
 
 dateTimePicker.style.width = '300px';
 dateTimePicker.style.height = '40px';
@@ -19,35 +19,12 @@ timer.style.display = 'flex';
 timer.style.maxWidth = '390px';
 timer.style.gap = '27px';
 
-fields.forEach(field => {
+timerFields.forEach(field => {
   field.style.display = 'flex';
   field.style.flexDirection = 'column';
   field.style.fontSize = '25px';
   field.style.alignItems = 'center';
 });
-
-let selectedDates = [];
-const options = {
-  enableTime: true,
-  time_24hr: true,
-  defaultDate: new Date(),
-  minuteIncrement: 1,
-  onClose: function (selectedDates) {
-    if (selectedDates[0] > new Date()) {
-      startButton.disabled = false;
-    } else {
-      startButton.disabled = true;
-      return window.alert(`Please choose a date in the future`);
-    }
-  },
-};
-
-flatpickr(dateTimePicker, options);
-
-// const date = new Date();
-// console.log(date.getTime());
-
-// startButton.addEventListener('click', () => {});
 
 function convertMs(ms) {
   const second = 1000;
@@ -63,6 +40,61 @@ function convertMs(ms) {
   return { days, hours, minutes, seconds };
 }
 
-function addLeadingZero(value) {
-  return String(value).padStart(2, '0');
+function updateTimerDisplay(time) {
+  timerFields[0].textContent = time.days.toString().padStart(2, '0');
+  timerFields[1].textContent = time.hours.toString().padStart(2, '0');
+  timerFields[2].textContent = time.minutes.toString().padStart(2, '0');
+  timerFields[3].textContent = time.seconds.toString().padStart(2, '0');
 }
+
+const options = {
+  enableTime: true,
+  time_24hr: true,
+  defaultDate: new Date(),
+  minuteIncrement: 1,
+  onClose(selectedDates) {
+    const selectedDate = selectedDates[0];
+    const now = new Date();
+
+    if (selectedDate > now) {
+      startButton.disabled = false;
+    } else {
+      startButton.disabled = true;
+      window.alert('Please choose a date in the future');
+    }
+  },
+};
+
+flatpickr(dateTimePicker, options);
+
+
+
+
+let countdownInterval;
+
+startButton.addEventListener('click', () => {
+  const selectedDate = flatpickr.parseDate(dateTimePicker.value);
+  const now = new Date();
+
+  if (selectedDate <= now) {
+    alert('Please choose a future date');
+    return;
+  }
+
+  clearInterval(countdownInterval); 
+
+  countdownInterval = setInterval(() => {
+    const now = new Date(); 
+    let timeRemaining = selectedDate - now;
+
+    if (timeRemaining <= 0) {
+      clearInterval(countdownInterval);
+      return;
+    }
+
+    const time = convertMs(timeRemaining);
+  updateTimerDisplay(time);
+    timeRemaining = -1000;
+  }, 1000);
+});
+
