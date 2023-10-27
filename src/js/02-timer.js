@@ -6,8 +6,10 @@ const startButton = document.querySelector('[data-start]');
 const timer = document.querySelector('.timer');
 const timerFields = document.querySelectorAll('.field .value');
 
-dateTimePicker.style.width = '300px';
+dateTimePicker.style.size = '100';
 dateTimePicker.style.height = '40px';
+
+dateTimePicker.style.fontSize = '20px';
 startButton.style.height = '40px';
 startButton.style.width = '80px';
 startButton.style.color = 'black';
@@ -67,9 +69,6 @@ const options = {
 
 flatpickr(dateTimePicker, options);
 
-
-
-
 let countdownInterval;
 
 startButton.addEventListener('click', () => {
@@ -81,10 +80,10 @@ startButton.addEventListener('click', () => {
     return;
   }
 
-  clearInterval(countdownInterval); 
+  clearInterval(countdownInterval);
 
   countdownInterval = setInterval(() => {
-    const now = new Date(); 
+    const now = new Date();
     let timeRemaining = selectedDate - now;
 
     if (timeRemaining <= 0) {
@@ -93,8 +92,7 @@ startButton.addEventListener('click', () => {
     }
 
     const time = convertMs(timeRemaining);
-  updateTimerDisplay(time);
+    updateTimerDisplay(time);
     timeRemaining = -1000;
   }, 1000);
 });
-
