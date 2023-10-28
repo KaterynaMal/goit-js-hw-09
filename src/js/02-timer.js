@@ -6,8 +6,8 @@ const startButton = document.querySelector('[data-start]');
 const timer = document.querySelector('.timer');
 const timerFields = document.querySelectorAll('.field .value');
 
-dateTimePicker.style.size = '100';
-dateTimePicker.style.height = '40px';
+// dateTimePicker.style.size = '100';
+// dateTimePicker.style.height = '40px';
 
 dateTimePicker.style.fontSize = '20px';
 startButton.style.height = '40px';
