@@ -28,21 +28,16 @@ form.addEventListener('submit', function (e) {
   const promises = [];
   for (let i = 0; i < amount; i++) {
     promises.push(createPromise(i, delay + step * i));
-    delay += step;
-  
-    Promise.all(promises)
-      .then(results => {
-        results.forEach(({ position, delay }) => {
-          console.log(`✅ Fulfilled promise ${position} in ${delay}ms`);
-        });
+  }
+
+  promises.forEach(promise => {
+    promise
+      .then(({ position, delay }) => {
+        console.log(`✅ Fulfilled promise ${position} in ${delay}ms`);
       })
 
       .catch(({ position, delay }) => {
         console.log(`❌ Rejected promise ${position} in ${delay}ms`);
       });
-  }
-
-
-      
-    });
-
+  });
+});
